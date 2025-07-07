@@ -22,20 +22,47 @@ To identify factors influencing customer churn and predict at-risk customers usi
 
 ### 🔍 Key SQL Operations:
 - Gender & Contract Distribution
-<img width="718" height="335" alt="Image" src="https://github.com/user-attachments/assets/31e74cb2-b804-482f-867e-6acf7e8332d6" />
+
+SELECT Gender,
+COUNT(GENDER) AS totalcount,
+COUNT(GENDER) * 100.0/(SELECT COUNT(*) FROM stg_churn) AS Percentage
+FROM stg_churn
+GROUP BY GENDER
+
 <img width="264" height="70" alt="Image" src="https://github.com/user-attachments/assets/3d5e04f0-fbee-4978-ad24-9cc61a8b79d3" />
+
+SELECT Contract,
+COUNT(Contract) AS totalcount,
+COUNT(Contract) * 100.0/(SELECT COUNT(*) FROM stg_churn) AS Percentage
+FROM stg_churn
+GROUP BY Contract
+
 <img width="302" height="96" alt="Image" src="https://github.com/user-attachments/assets/a5bdde35-f4b1-48db-8c07-262ab47affb6" />
 
 - Revenue Distribution by Customer Status
-<img width="894" height="198" alt="Image" src="https://github.com/user-attachments/assets/9cfc9deb-fb36-4b30-8dde-748fef3da8df" />
+
+SELECT customer_status,
+COUNT(customer_status) AS totalcount,
+SUM(total_revenue) AS Totalrevnue,
+SUM(total_revenue) * 100.0/(SELECT SUM(total_revenue) FROM stg_churn) AS Revenuepercentage
+FROM stg_churn
+GROUP BY customer_status
+
 <img width="414" height="110" alt="Image" src="https://github.com/user-attachments/assets/bd10a3d3-6518-481a-ab01-fcaa5261d12d" />
-- Churned vs Retained breakdown
 
 - State-wise customer count and churn %
-<img width="713" height="158" alt="Image" src="https://github.com/user-attachments/assets/7e3faa98-1b79-4987-bd6d-6462718d43c4" />
+
+SELECT state,
+COUNT(state) AS TotalCount,
+COUNT(state) * 100.0 / (SELECT COUNT(*) FROM stg_churn) AS Percentage
+FROM stg_churn
+GROUP BY state
+ORDER BY Percentage DESC
+
 <img width="308" height="443" alt="Image" src="https://github.com/user-attachments/assets/73fb394d-0692-4ac7-9b57-70d75c758082" />
 
 - Null Value Audit (30+ columns)
+
 SELECT 
     SUM(CASE WHEN Customer_ID IS NULL THEN 1 ELSE 0 END) AS Customer_ID_Null_Count,
 
@@ -102,6 +129,7 @@ SELECT
     SUM(CASE WHEN Churn_Reason IS NULL THEN 1 ELSE 0 END) AS Churn_Reason_Null_Count
 
 FROM stg_Churn;
+
 <img width="1302" height="51" alt="Image" src="https://github.com/user-attachments/assets/fd207de9-cfe2-4440-b26c-511d4ee4fead" />
 
 <img width="1235" height="51" alt="Image" src="https://github.com/user-attachments/assets/9c1567a4-0153-4137-ad2a-309293123053" />
@@ -109,7 +137,9 @@ FROM stg_Churn;
 <img width="1167" height="50" alt="Image" src="https://github.com/user-attachments/assets/22c94d37-ca88-4861-83ce-c99b8a1f9054" />
 
 <img width="1021" height="50" alt="Image" src="https://github.com/user-attachments/assets/3c62cfb3-c49c-4357-89c2-531c6680e836" />
+
 - Data Cleansing using `ISNULL()` for categorical columns
+
 SELECT 
     Customer_ID,
 
@@ -174,22 +204,20 @@ SELECT
     ISNULL(Churn_Category, 'Others') AS Churn_Category,
 
     ISNULL(Churn_Reason , 'Others') AS Churn_Reason
-
- 
-
 INTO [db_Churn].[dbo].[prod_Churn]
-
 FROM [db_Churn].[dbo].[stg_Churn];
 
 - Split Views Created:
   - `vw_ChurnData` (Churned & Stayed customers)
-  CREATE VIEW vw_ChurnData AS
+
+CREATE VIEW vw_ChurnData AS
 	SELECT * 
 	FROM prod_Churn 
 	WHERE customer_status IN ('Churned', 'Stayed')
 
   - `vw_JoinData` (New joiners for prediction)
-  - CREATE VIEW vw_JoinData AS
+
+CREATE VIEW vw_JoinData AS
 	SELECT *
 	FROM prod_Churn
 	WHERE customer_status = 'Joined';
@@ -212,21 +240,49 @@ To predict which newly joined customers are likely to churn using a classificati
 - **Train-Test Split:** 80–20
 
 ### ✅ Initial Evaluation:
+- **Predicted Churners (Untuned Model):** 381
 - Accuracy: ~0.81
 - Confusion Matrix & Classification Report generated
+
+<img width="449" height="264" alt="Image" src="https://github.com/user-attachments/assets/d984bf49-bab5-41af-a89c-f6876c5beac9" />
+
 - Feature Importance plotted (Seaborn barplot)
 
+importances = model.feature_importances_
+indices = np.argsort(importances)[::-1]
+
+plt.figure(figsize=(15,10))
+sns.barplot(x=importances[indices], y=X.columns[indices])
+plt.title('Feature Importances')
+plt.xlabel('Relative Importance')
+plt.ylabel('Feature Names')
+plt.show()
+
+<img width="1416" height="855" alt="Image" src="https://github.com/user-attachments/assets/d7696fe2-60bd-4eb7-b19c-1de2493a9e22" />
+
+- This chart ranks input features by their relative contribution to the model’s decisions. Features with higher importance scores had a stronger influence on predicting whether a customer would churn.
+- Features like Tenure_in_Months, Contract Type, and Monthly_Charge were found to be most influential.
+- Less important features which has relative importance less than 0.01 were considered for removal during the model tuning phase to improve generalization and reduce complexity.
+- The features include 'Gender', 'Married', 'Phone_Service', 'Multiple_Lines','Online_Backup', 'Device_Protection_Plan','Streaming_TV', 'Streaming_Movies', 'Streaming_Music', 'Unlimited_Data', 'Total_Refunds', 'Total_Extra_Data_Charges'
+
+Explain the model to non-technical stakeholders
 ---
 
 ### 🛠️ Model Tuning: Feature Reduction & Re-training
 
 To improve model performance and reduce overfitting, less important features (based on feature importance chart) were dropped:
 - Removed: `Gender`, `Married`, `Phone_Service`, `Multiple_Lines`, `Streaming_*`, `Unlimited_Data`, `Total_Refunds`, `Total_Extra_Data_Charges`, etc.
+- Relative importance of remaining features
+
+<img width="1416" height="855" alt="Image" src="https://github.com/user-attachments/assets/2b3e1604-deed-4923-a97f-41b900d0d41a" />
 
 #### Re-tuning Process:
 - Re-trained model with remaining important features
 - Re-encoded categorical variables
 - Evaluated accuracy and classification report again
+
+![image](https://github.com/user-attachments/assets/f14f3e70-7745-4628-9c54-485e078bface)
+
 
 #### Results:
 - **Predicted Churners (Tuned Model):** 364
@@ -280,6 +336,12 @@ To improve model performance and reduce overfitting, less important features (ba
 - KPI cards, Donut & Bar charts, Heatmaps, Treemaps, Histograms
 - Customer Funnel: Active → Churned → Retained
 - Segmentation by services, payment method, referrals
+- Used tooltips for reasons of churn
+
+<img width="881" height="501" alt="Image" src="https://github.com/user-attachments/assets/1aa88e2b-dbc2-4154-829e-e6aee1593058" />
+
+![PowerBI - Prediction ](https://github.com/user-attachments/assets/58bdb2a3-8152-49cd-bbbc-8c5cc2bd7614)
+
 
 ---
 
