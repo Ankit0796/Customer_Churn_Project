@@ -1,6 +1,11 @@
 # 📉 Customer Churn Analysis | SQL Server + Python (ML) + Power BI
 
 This end-to-end Customer Churn Analysis project utilizes **SQL Server** for data profiling and transformation, **Python** for churn prediction and model tuning, and **Power BI** for interactive dashboard visualization.
+### 🌐 Power BI Online Report
+
+You can view the interactive churn dashboard live on Power BI Service:
+
+🔗 [**View Power BI Dashboard**](https://app.powerbi.com/groups/9aa20a76-8582-4f9b-ac43-89baea9f0cda/reports/6693e750-76cc-47eb-86a9-0d7d8ed970ab/28983728a210d014d489?experience=power-bi)
 
 ---
 
