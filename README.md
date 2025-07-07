@@ -22,14 +22,177 @@ To identify factors influencing customer churn and predict at-risk customers usi
 
 ### 🔍 Key SQL Operations:
 - Gender & Contract Distribution
+<img width="718" height="335" alt="Image" src="https://github.com/user-attachments/assets/31e74cb2-b804-482f-867e-6acf7e8332d6" />
+<img width="264" height="70" alt="Image" src="https://github.com/user-attachments/assets/3d5e04f0-fbee-4978-ad24-9cc61a8b79d3" />
+<img width="302" height="96" alt="Image" src="https://github.com/user-attachments/assets/a5bdde35-f4b1-48db-8c07-262ab47affb6" />
+
 - Revenue Distribution by Customer Status
+<img width="894" height="198" alt="Image" src="https://github.com/user-attachments/assets/9cfc9deb-fb36-4b30-8dde-748fef3da8df" />
+<img width="414" height="110" alt="Image" src="https://github.com/user-attachments/assets/bd10a3d3-6518-481a-ab01-fcaa5261d12d" />
 - Churned vs Retained breakdown
+
 - State-wise customer count and churn %
+<img width="713" height="158" alt="Image" src="https://github.com/user-attachments/assets/7e3faa98-1b79-4987-bd6d-6462718d43c4" />
+<img width="308" height="443" alt="Image" src="https://github.com/user-attachments/assets/73fb394d-0692-4ac7-9b57-70d75c758082" />
+
 - Null Value Audit (30+ columns)
+SELECT 
+    SUM(CASE WHEN Customer_ID IS NULL THEN 1 ELSE 0 END) AS Customer_ID_Null_Count,
+
+    SUM(CASE WHEN Gender IS NULL THEN 1 ELSE 0 END) AS Gender_Null_Count,
+
+    SUM(CASE WHEN Age IS NULL THEN 1 ELSE 0 END) AS Age_Null_Count,
+
+    SUM(CASE WHEN Married IS NULL THEN 1 ELSE 0 END) AS Married_Null_Count,
+
+    SUM(CASE WHEN State IS NULL THEN 1 ELSE 0 END) AS State_Null_Count,
+
+    SUM(CASE WHEN Number_of_Referrals IS NULL THEN 1 ELSE 0 END) AS Number_of_Referrals_Null_Count,
+
+    SUM(CASE WHEN Tenure_in_Months IS NULL THEN 1 ELSE 0 END) AS Tenure_in_Months_Null_Count,
+
+    SUM(CASE WHEN Value_Deal IS NULL THEN 1 ELSE 0 END) AS Value_Deal_Null_Count,
+
+    SUM(CASE WHEN Phone_Service IS NULL THEN 1 ELSE 0 END) AS Phone_Service_Null_Count,
+
+    SUM(CASE WHEN Multiple_Lines IS NULL THEN 1 ELSE 0 END) AS Multiple_Lines_Null_Count,
+
+    SUM(CASE WHEN Internet_Service IS NULL THEN 1 ELSE 0 END) AS Internet_Service_Null_Count,
+
+    SUM(CASE WHEN Internet_Type IS NULL THEN 1 ELSE 0 END) AS Internet_Type_Null_Count,
+
+    SUM(CASE WHEN Online_Security IS NULL THEN 1 ELSE 0 END) AS Online_Security_Null_Count,
+
+    SUM(CASE WHEN Online_Backup IS NULL THEN 1 ELSE 0 END) AS Online_Backup_Null_Count,
+
+    SUM(CASE WHEN Device_Protection_Plan IS NULL THEN 1 ELSE 0 END) AS Device_Protection_Plan_Null_Count,
+
+    SUM(CASE WHEN Premium_Support IS NULL THEN 1 ELSE 0 END) AS Premium_Support_Null_Count,
+
+    SUM(CASE WHEN Streaming_TV IS NULL THEN 1 ELSE 0 END) AS Streaming_TV_Null_Count,
+
+    SUM(CASE WHEN Streaming_Movies IS NULL THEN 1 ELSE 0 END) AS Streaming_Movies_Null_Count,
+
+    SUM(CASE WHEN Streaming_Music IS NULL THEN 1 ELSE 0 END) AS Streaming_Music_Null_Count,
+
+    SUM(CASE WHEN Unlimited_Data IS NULL THEN 1 ELSE 0 END) AS Unlimited_Data_Null_Count,
+
+    SUM(CASE WHEN Contract IS NULL THEN 1 ELSE 0 END) AS Contract_Null_Count,
+
+    SUM(CASE WHEN Paperless_Billing IS NULL THEN 1 ELSE 0 END) AS Paperless_Billing_Null_Count,
+
+    SUM(CASE WHEN Payment_Method IS NULL THEN 1 ELSE 0 END) AS Payment_Method_Null_Count,
+
+    SUM(CASE WHEN Monthly_Charge IS NULL THEN 1 ELSE 0 END) AS Monthly_Charge_Null_Count,
+
+    SUM(CASE WHEN Total_Charges IS NULL THEN 1 ELSE 0 END) AS Total_Charges_Null_Count,
+
+    SUM(CASE WHEN Total_Refunds IS NULL THEN 1 ELSE 0 END) AS Total_Refunds_Null_Count,
+
+    SUM(CASE WHEN Total_Extra_Data_Charges IS NULL THEN 1 ELSE 0 END) AS Total_Extra_Data_Charges_Null_Count,
+
+    SUM(CASE WHEN Total_Long_Distance_Charges IS NULL THEN 1 ELSE 0 END) AS Total_Long_Distance_Charges_Null_Count,
+
+    SUM(CASE WHEN Total_Revenue IS NULL THEN 1 ELSE 0 END) AS Total_Revenue_Null_Count,
+
+    SUM(CASE WHEN Customer_Status IS NULL THEN 1 ELSE 0 END) AS Customer_Status_Null_Count,
+
+    SUM(CASE WHEN Churn_Category IS NULL THEN 1 ELSE 0 END) AS Churn_Category_Null_Count,
+
+    SUM(CASE WHEN Churn_Reason IS NULL THEN 1 ELSE 0 END) AS Churn_Reason_Null_Count
+
+FROM stg_Churn;
+<img width="1302" height="51" alt="Image" src="https://github.com/user-attachments/assets/fd207de9-cfe2-4440-b26c-511d4ee4fead" />
+
+<img width="1235" height="51" alt="Image" src="https://github.com/user-attachments/assets/9c1567a4-0153-4137-ad2a-309293123053" />
+
+<img width="1167" height="50" alt="Image" src="https://github.com/user-attachments/assets/22c94d37-ca88-4861-83ce-c99b8a1f9054" />
+
+<img width="1021" height="50" alt="Image" src="https://github.com/user-attachments/assets/3c62cfb3-c49c-4357-89c2-531c6680e836" />
 - Data Cleansing using `ISNULL()` for categorical columns
+SELECT 
+    Customer_ID,
+
+    Gender,
+
+    Age,
+
+    Married,
+
+    State,
+
+    Number_of_Referrals,
+
+    Tenure_in_Months,
+
+    ISNULL(Value_Deal, 'None') AS Value_Deal,
+
+    Phone_Service,
+
+    ISNULL(Multiple_Lines, 'No') As Multiple_Lines,
+
+    Internet_Service,
+
+    ISNULL(Internet_Type, 'None') AS Internet_Type,
+
+    ISNULL(Online_Security, 'No') AS Online_Security,
+
+    ISNULL(Online_Backup, 'No') AS Online_Backup,
+
+    ISNULL(Device_Protection_Plan, 'No') AS Device_Protection_Plan,
+
+    ISNULL(Premium_Support, 'No') AS Premium_Support,
+
+    ISNULL(Streaming_TV, 'No') AS Streaming_TV,
+
+    ISNULL(Streaming_Movies, 'No') AS Streaming_Movies,
+
+    ISNULL(Streaming_Music, 'No') AS Streaming_Music,
+
+    ISNULL(Unlimited_Data, 'No') AS Unlimited_Data,
+
+    Contract,
+
+    Paperless_Billing,
+
+    Payment_Method,
+
+    Monthly_Charge,
+
+    Total_Charges,
+
+    Total_Refunds,
+
+    Total_Extra_Data_Charges,
+
+    Total_Long_Distance_Charges,
+
+    Total_Revenue,
+
+    Customer_Status,
+
+    ISNULL(Churn_Category, 'Others') AS Churn_Category,
+
+    ISNULL(Churn_Reason , 'Others') AS Churn_Reason
+
+ 
+
+INTO [db_Churn].[dbo].[prod_Churn]
+
+FROM [db_Churn].[dbo].[stg_Churn];
+
 - Split Views Created:
   - `vw_ChurnData` (Churned & Stayed customers)
+  CREATE VIEW vw_ChurnData AS
+	SELECT * 
+	FROM prod_Churn 
+	WHERE customer_status IN ('Churned', 'Stayed')
+
   - `vw_JoinData` (New joiners for prediction)
+  - CREATE VIEW vw_JoinData AS
+	SELECT *
+	FROM prod_Churn
+	WHERE customer_status = 'Joined';
 
 ---
 
