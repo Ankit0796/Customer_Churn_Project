@@ -290,7 +290,13 @@ To improve model performance and reduce overfitting, less important features (ba
 
 
 #### Results:
-- **Predicted Churners (Tuned Model):** 364
+
+| Model Version     | Accuracy | Precision | Recall | F1-Score | Churn Predicted |
+|------------------|----------|-----------|--------|----------|-----------------|
+| All Features      | 85.3%    | 80.6%     | 64.5%  | 71.7%    | 381 customers   |
+| Reduced Features  | 86.0%    | 80.0%     | 63.0%  | 71.0%    | 364 customers   |
+
+
 - Exported prediction to: `Prediction Data tuned.csv`
 - High-churn segments retained:
   - Customers with <6 months or >24 months tenure
